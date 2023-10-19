@@ -1,0 +1,59 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: "jdbc:h2:mem:spring_security;MODE=MYSQL;DB_CLOSE_DELAY=-1"
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    database: h2
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+  sql:
+    init:
+      platform: h2
+      schema-locations: classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
+      encoding: UTF-8
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-name: kakao
+            client-id: a80c99aad34c25ffc1badafc46e13231
+            client-secret: E4KR15SN46M6244AHLCjIsi7zzjxTaIP
+            scope: profile_nickname, profile_image
+            redirect-uri: "http://localhost:8081/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+jwt:
+  issuer: Dev-Yesung
+  # JWT secret 생성기: https://jwt-keys.21no.de/
+  accessTokenSecret: pJAZYHJ/QtvrEGDY2w41T55lIDz/XDXslUV6CSxJFcI=
+  refreshTokenSecret: v271V6rnNyNE35vkjdqYcSCVGWRhgfeiIuy4pJD+/cw=
+  accessTokenExpirySeconds: 300
+  refreshTokenExpirySeconds: 300
