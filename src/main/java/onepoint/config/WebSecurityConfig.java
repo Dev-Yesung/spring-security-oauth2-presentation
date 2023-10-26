@@ -109,6 +109,8 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
+			// 필터 비활성화 이유는 아래의 링크를 참고해주세요.
+			// https://chat.openai.com/share/73fe1cf6-65f7-45d0-a58b-fcaeda79eea5
 			.headers().disable()
 			.csrf().disable()
 			.httpBasic().disable()
@@ -117,14 +119,20 @@ public class WebSecurityConfig {
 			.logout().disable()
 			// rememberMe 기능 사용 X
 			.rememberMe().disable()
-			// Session 사용 X
+			// JWT를 사용하므로 Session 사용 X
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			// OAuth2 설정
+			// OAuth2 기반 로그인을 설정
 			.oauth2Login()
+			// OAuth2 인증 엔드포인트와 관련된 설정을 구성
+			// 엔드포인트는 사용자가 로그인 및 권한 부여를 처리하는 곳
 			.authorizationEndpoint()
+			// 사용자 지정 구현체를 사용하여 인증 요청과 관련된 정보를 저장하고 관리
+			// 이 정보는 사용자의 요청을 추적하고 후속 요청에 사용할 수 있다.
 			.authorizationRequestRepository(authorizationRequestRepository)
 			.and()
+			// OAuth2 로그인 성공 시 사용될 사용자 지정 핸들러로 OAuth2 인증 성공 시 실행할 사용자 지정 로직을 정의
 			.successHandler(oAuth2AuthenticationSuccessHandler)
 			.authorizedClientRepository(oAuth2AuthorizedClientRepository())
 			.and()
@@ -132,7 +140,9 @@ public class WebSecurityConfig {
 			.exceptionHandling().accessDeniedHandler(accessDeniedHandler())
 			.and()
 			// JWT 필터
-			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			// 참고링크: https://chat.openai.com/share/48b99424-e02f-4983-9d05-87c409d4dbc1
+			.addFilterBefore(jwtAuthenticationFilter,
+				UsernamePasswordAuthenticationFilter.class)
 			.build();
 	}
 }

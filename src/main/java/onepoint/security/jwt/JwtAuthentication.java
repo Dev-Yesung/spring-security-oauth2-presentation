@@ -6,14 +6,18 @@ package onepoint.security.jwt;
  */
 public class JwtAuthentication {
 
+	private final String username;
 	private final String accessToken;
 	private final String refreshToken;
-	private final String username;
 
-	public JwtAuthentication(String accessToken, String refreshToken, String username) {
+	public JwtAuthentication(String username, String accessToken, String refreshToken) {
+		this.username = username;
 		this.accessToken = accessToken;
 		this.refreshToken = refreshToken;
-		this.username = username;
+	}
+
+	public String getUsername() {
+		return username;
 	}
 
 	public String getAccessToken() {
@@ -22,9 +26,5 @@ public class JwtAuthentication {
 
 	public String getRefreshToken() {
 		return refreshToken;
-	}
-
-	public String getUsername() {
-		return username;
 	}
 }
